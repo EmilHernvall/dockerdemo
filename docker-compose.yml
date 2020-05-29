@@ -1,0 +1,22 @@
+version: '2.2'
+services:
+    catpicdb:
+        image: 'postgres:11.1'
+        environment:
+            - POSTGRES_USER=catpics
+            - POSTGRES_PASSWORD=catpics
+        volumes:
+            - ./db:/docker-entrypoint-initdb.d
+            - pgdata:/var/lib/postgresql/data
+    catcrawler:
+        build: catcrawler
+        depends_on:
+            - catpicdb
+    catviewer:
+        build: catviewer
+        depends_on:
+            - catpicdb
+        ports:
+            - 5000:5000
+volumes:
+    pgdata:
